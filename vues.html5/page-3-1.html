@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>TP 3.1 / transition de déplacement</title>
+	<style>
+		/* mise en forme du corps <body> de la page */
+		body {
+			font: 1em Verdana, Arial, Helvetica, sans-serif;
+		}
+		/* mise en forme des éléments <li> contenus dans l'élément id="menu" */
+		#menu li {
+			list-style: none;
+		}
+		/* mise en forme des éléments <a> contenus dans l'élément id="menu" */
+		#menu a{
+			position: relative;
+			left: 20px;
+			display: block;
+			width: 120px;
+			padding: 5px;
+			margin-bottom: 5px;
+			border: 1px solid #333;
+			background-color: #eee;
+			text-align: center;
+			font-weight: bold; 
+			color: black;
+			text-decoration: none;
+			
+			/* transition de la propriété left sur 0.5 secondes */
+			-moz-transition: left 500ms ease-in;
+			-webkit-transition: left 500ms ease-in;
+			-o-transition: left 500ms ease-in;
+			transition: left 500ms ease-in;
+			
+		}
+		
+		/* mise en forme du survol de la souris sur les éléments <a> contenus dans l'élément id="menu" */
+		#menu a:hover {
+			/* valeur de la propriété left au survol de la souris */
+			left: 50px;
+		}
+		
+		
+	</style>
+</head>
+<body>
+	<ul id="menu">
+		<li><a href="#">Accueil</a></li>
+		<li><a href="#">Références</a></li>
+		<li><a href="#">Contacts</a></li>
+	</ul>
+</body>
+</html>

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>TP 5.2 / Validation de formulaire en JavaScript</title>
+	<style>
+		/* style de la page <html> */
+		html {
+			height: 100%;
+		}
+		
+		/* style du corps de la page <body> */
+		body {
+			font: 1em Verdana, Arial, Helvetica, sans-serif;
+				
+			/* fond avec un dégradé de couleur (blanc en haut, gris léger 210, 210, 210 en bas) */
+			background: -moz-linear-gradient(top, rgb(255, 255, 255), rgb(210, 210, 210));
+			background: -webkit-gradient(linear, left top, left bottom, from(rgb(255, 255, 255)), to(rgb(210, 210, 210)));
+			background: linear-gradient(to bottom, rgb(255, 255, 255), rgb(210, 210, 210));
+		}
+				
+		/* style de la division id="page" */
+		#page {
+			/* largeur 800px, centrage horiz avec marges auto, padding 20, bordure noire ép 1, alignement texte gauche */
+			width: 800px;
+			margin: 20px auto;
+			padding: 0px 20px;
+			border: #000 1px solid; 
+			text-align: left;
+					
+			/* coins arrondis avec un rayon de 15 pixels */
+			-moz-border-radius: 15px;
+			-webkit-border-radius: 15px;
+			-o-border-radius: 15px;
+			-ms-border-radius: 15px;
+			-khtml-border-radius: 15px;
+			border-radius: 15px;
+					
+			/* fond avec un dégradé de couleur (blanc en haut, gris léger 210, 210, 210 en bas) */
+			background: -moz-linear-gradient(top, rgb(255, 255, 255), rgb(210, 210, 210));
+			background: -webkit-gradient(linear, left top, left bottom, from(rgb(255, 255, 255)), to(rgb(210, 210, 210)));
+			background: linear-gradient(to bottom, rgb(255, 255, 255), rgb(225, 225, 225));
+		}
+		
+		/* ------------------------ styles lies au systeme d'affichage de messages ---------------------------- */
+
+		/* style des éléments <div> qui sont enfants directs d'un élément possédant la classe "classe_message" */
+		.classe_message {
+			/* dimensions de la division, padding, margin, bordure */
+			width: 500px;
+			background: #fff;
+			position: relative;
+			margin: 10% auto;
+			padding: 30px;
+		
+			/* style du texte de la division */
+			text-shadow: 0 1px 0 #fff;			
+			
+			/* coins arrondis de rayon 7px */
+			-moz-border-radius: 7px;
+			-webkit-border-radius: 7px;
+			-o-border-radius: 7px;
+			-ms-border-radius: 7px;
+			-khtml-border-radius: 7px;
+			border-radius: 7px;
+			
+			/* ombre portée noire */
+			-webkit-box-shadow: 0 3px 20px rgba(0, 0, 0, 0.9);
+			-moz-box-shadow: 0 3px 20px rgba(0, 0, 0, 0.9);
+			-o-box-shadow: 0 3px 20px rgba(0, 0, 0, 0.9);
+			box-shadow: 0 3px 20px rgba(0, 0, 0, 0.9);
+			
+			/* fond avec un dégradé de couleur (blanc en haut, gris 210, 210, 210 en bas) */	
+			background: -moz-linear-gradient(top, rgb(255, 255, 255), rgb(210, 210, 210));
+			background: -webkit-gradient(linear, right top, right bottom, from(rgb(255, 255, 255)), to(rgb(210, 210, 210)));
+			background: linear-gradient(to bottom, rgb(255, 255, 255), rgb(210, 210, 210));
+		}
+		/* style des titres <h2> possédant la classe "classe_avertissement" et situés dans l'élément id="affichage_message" */
+		h2.classe_avertissement {
+			/* style du titre du message d'avertissement et son icone */
+			padding-left: 50px;
+			line-height: 32px;
+			background: url(../images-tp-4-4/avertissement.png) no-repeat left bottom;
+			color: #0b4c8e;
+		}
+		
+		/* style des titres <h2> possédant la classe "classe_information" et situés dans l'élément id="affichage_message" */
+		h2.classe_information {
+			/* style du titre du message d'information et son icone */
+			padding-left: 50px;
+			line-height: 32px;
+			background: url(../images-tp-4-4/information.png) no-repeat left bottom;
+			color: #0b4c8e;
+		}
+		
+		/* style des <p> possédant la classe "classe_texte_message" et situés dans l'élément id="affichage_message" */
+		p.classe_texte_message {
+			/* style du message */
+			padding-left: 50px;
+			font-size: 1.2em;
+		}
+		
+		/* style des liens hypertextes <a> situés dans des éléments possédant la classe "classe_message" */
+		.classe_message a{
+			/* style du lien de fermeture */
+			position: absolute;
+			right: 10px;
+			top: 10px;
+			color: #000;
+		}
+		/* style des éléments possédant la classe "classe_message" */
+		/* le conteneur qui va recouvrir la page */
+		.classe_message {
+			/* on occupe tout l'espace */
+			position: fixed;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			/* un fond noir avec une transparence de 30% */
+			background: rgba(0, 0, 0, 0.3);
+			/* le conteneur est placé sur la page */
+			z-index: 10000;
+			
+			/* utilisation de la transformation de transparence à l'ouverture */
+			-webkit-transition: opacity 500ms ease-in;
+			-moz-transition: opacity 500ms ease-in;
+			-o-transition: opacity 500ms ease-in;
+			transition: opacity 500ms ease-in;
+			
+			/* au chargement de la page, le conteneur est transparent */
+			opacity: 0;
+			/* et on ne peut pas cliquer sur ses éléments */
+			pointer-events: none;
+		}
+		/* quand le conteneur est ciblé, il devient opaque */
+		.classe_message:target {
+			opacity: 1;
+			/* et on peut maintenant cliquer sur ses éléments */
+			pointer-events: auto;
+		}
+		
+		/* ---------------- styles des éléments de formulaire ------------------- */
+		
+		/* styles des zones de saisies de textes, de mots de passe et d'adresses mail */
+		input[type=text],input[type=email],input[type=password] {
+			border: solid 1px grey;
+			width: 200px;
+			display: inline-block;
+		}
+		/* styles des <label> */
+		label {
+			width: 250px;
+			text-align: left;
+			display: inline-block;
+		}
+		/* style du bouton de validation du formulaire */
+		input[type=submit] {
+			font: 1em helvetica, sans-serif;
+			border: solid 1px grey;
+			width: 100px;
+			display: inline-block;
+			margin-left: 300px;
+			background-color: #ddd;
+		}
+		
+		/* styles des zones de saisies de textes et de mots de passe quand la saisie est incorrecte */
+		input[type=text]:invalid , input[type=password]:invalid {
+			/* un fond blanc avec un petit rond rouge à droite */
+			background: #fff url(../images-tp-5-2/rond-rouge.png) no-repeat 99% center;
+		}
+		
+		/* styles des zones de saisies de textes et de mots de passe quand la saisie est correcte */
+		input[type=text]:valid , input[type=password]:valid  {
+			/* un fond blanc avec un petit rond vert à droite */
+			background: #fff url(../images-tp-5-2/rond-vert.png) no-repeat 99% center;
+		}
+			
+	</style>
+	<script>
+		// dès que la page est chargée (événement onload), la fonction initialisations est exécutée
+		window.onload = onload;
+		
+		// la fonction initialisations appelée à la fin du chargement de la page
+		function initialisations() {
+			// événement "onchange" de la case à cocher "caseAfficherMdp" associé à la fonction "afficherMdp"
+			document.getElementById("caseAfficherMdp").onchange = afficherMdp;
+			
+			// place le focus sur la zone txtNouveauMdp au premier chargement de la page
+			document.getElementById("txtNouveauMdp").focus(); 
+		}
+		
+		// selon l'état de la case, le type des zones de saisie est "text" ou "password"
+		function afficherMdp()
+		{	if (document.getElementById("caseAfficherMdp").checked == true)
+			{	// l'utilisateur souhaite afficher en clair les mots de passe
+				document.getElementById("txtNouveauMdp").type="text";
+				document.getElementById("txtConfirmation").type="text";
+			}
+			else
+			{	// l'utilisateur ne souhaite pas afficher en clair les mots de passe
+				document.getElementById("txtNouveauMdp").type="password";
+				document.getElementById("txtConfirmation").type="password";
+			}
+		}
+		// la fonction validationGenerale() vérifie que les données saisies sont correctes
+		// elle retourne un résultat booléen :
+		// true valide le submit et permet la transmission des données du formulaire vers le serveur
+		// false bloque le submit et empêche la transmission des données du formulaire vers le serveur
+		function validationGenerale() {
+			if (document.getElementById("txtNouveauMdp").value == "") {
+				afficher_avertissement("Le nouveau mot de passe doit être obligatoirement saisi !");
+				document.getElementById("txtNouveauMdp").focus(); 	// place le focus sur la zone à corriger
+				return false;
+			}
+			if (document.getElementById("txtConfirmation").value == "") {
+				afficher_avertissement("La confirmation du nouveau mot de passe doit être obligatoirement saisie !");
+				document.getElementById("txtConfirmation").focus(); 	// place le focus sur la zone à corriger
+				return false;
+			}
+			if ( estUnMdpCorrect(document.getElementById("txtNouveauMdp").value) == false) {
+				afficher_avertissement("Le mot de passe doit comporter au moins 8 caractères, dont au moins une lettre minuscule, une lettre majuscule et un chiffre !");
+				document.getElementById("txtNouveauMdp").focus(); 	// place le focus sur la zone à corriger
+				return false;
+			}
+			if (document.getElementById("txtNouveauMdp").value != document.getElementById("txtConfirmation").value) {
+				afficher_avertissement("Les 2 valeurs saisies sont différentes !");
+				document.getElementById("txtNouveauMdp").focus(); 	// place le focus sur la zone à corriger
+				return false;
+			}
+			// si on arrive ici, c'est que toutes les données sont OK :
+			return true;
+		}
+		// la fonction estUnMdpCorrect vérifie que le mot de passe comporte au moins 8 caractères,
+		// dont au moins une lettre minuscule, une lettre majuscule et un chiffre
+		function estUnMdpCorrect(leMdpAtester) {
+			// utilisation d'une expression régulière pour vérifier la force du mot de passe :
+			EXPRESSION = "^[a-z][A-Z][0-9]";
+
+			monExprRegul = new RegExp(EXPRESSION);
+			// on retourne true si le leMdpAtester est bon et si le leMdpAtester comporte au moins 8 caractères :
+			if ( monExprRegul.test (leMdpAtester) == true && leMdpAtester.length >= 8 ) return true;
+			else return false;
+		}
+		
+		// la fonction d'affichage d'une information
+		function afficher_information(msg) {
+			document.getElementById("titre_message").innerHTML = "Information...";
+			document.getElementById("titre_message").className = "classe_information";
+			document.getElementById("texte_message").innerHTML = msg;
+			window.open ("#affichage_message", "_self");
+		}
+		
+		// la fonction d'affichage d'un avertissement
+		function afficher_avertissement(msg) {
+			document.getElementById("titre_message").innerHTML = "Avertissement...";
+			document.getElementById("titre_message").className = "classe_avertissement";
+			document.getElementById("texte_message").innerHTML = msg;
+			window.open ("#affichage_message", "_self");
+
+		}
+
+
+	</script>
+</head>
+<body>
+	<div id="page">
+		<h3>Modifier mon mot de passe</h3>
+		<p><i>(8 caractères minimum avec au moins un chiffre, une lettre minuscule et une lettre majuscule)</i></p>
+		<form id="formModificationMdp" name="formModificationMdp" method="post" action="#" >
+			<p>
+				<label for="txtNouveauMdp">Nouveau mot de passe * :</label>
+				<input type="password" id="txtNouveauMdp" name="txtNouveauMdp" required pattern="^.{8,}$" />
+			</p>
+			<p>
+				<label for="txtConfirmation">Confirmation * :</label>
+				<input type="password" id="txtConfirmation" name="txtConfirmation" required pattern="^.{8,}$" />
+			</p>
+			<p>
+				<label for="caseAfficherMdp">Afficher en clair :</label>
+				<input type="checkbox" id="caseAfficherMdp" name="caseAfficherMdp" >
+			</p>
+			<p><input type="submit" id="btnEnvoyer" name="btnEnvoyer" value="Envoyer" />
+		</form>
+	</div>
+	
+	<aside id="affichage_message" class="classe_message">
+		<div>
+			<h2 id="titre_message" class="classe_information">Message</h2>
+			<p id="texte_message" class="classe_texte_message">Voici le texte du message</p>
+			<a href="#close" title="Fermer">Fermer</a>
+		</div>
+	</aside>	
+</body>
+</html>

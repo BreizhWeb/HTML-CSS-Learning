@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>TP 4.4 / Fenêtre modale</title>
+	<style>
+		/* style de la page <html> */
+		html {
+			height: 100%;
+		}
+		
+		/* style du corps de la page <body> */
+		body {
+			font: 1em Verdana, Arial, Helvetica, sans-serif;
+				
+			/* fond avec un dégradé de couleur (blanc en haut, gris léger 210, 210, 210 en bas) */
+			background: -moz-linear-gradient(top, rgb(255, 255, 255), rgb(210, 210, 210));
+			background: -webkit-gradient(linear, left top, left bottom, from(rgb(255, 255, 255)), to(rgb(210, 210, 210)));
+			background: linear-gradient(to bottom, rgb(255, 255, 255), rgb(210, 210, 210));
+		}
+				
+		/* style de la division id="page" */
+		#page {
+			/* largeur 800px, centrage horiz avec marges auto, padding 20, bordure noire ép 1, alignement texte gauche */
+			width: 800px;
+			margin: 20px auto;
+			padding: 20px;
+			border: #000 1px solid; 
+			text-align: left;
+					
+			/* coins arrondis avec un rayon de 15 pixels */
+			-moz-border-radius: 15px;
+			-webkit-border-radius: 15px;
+			-o-border-radius: 15px;
+			-ms-border-radius: 15px;
+			-khtml-border-radius: 15px;
+			border-radius: 15px;
+					
+			/* fond avec un dégradé de couleur (blanc en haut, gris léger 210, 210, 210 en bas) */
+			background: -moz-linear-gradient(top, rgb(255, 255, 255), rgb(210, 210, 210));
+			background: -webkit-gradient(linear, left top, left bottom, from(rgb(255, 255, 255)), to(rgb(210, 210, 210)));
+			background: linear-gradient(to bottom, rgb(255, 255, 255), rgb(225, 225, 225));
+		}
+		
+		/* style des liens <a> possédant la classe "bouton" et style des éléments <button> */
+		.bouton, button {
+			/* dimensions des boutons, padding, margin, bordure */
+			width: 250px;
+			display: block;
+			margin: 1em auto;
+			padding: 5px 0 5px 0;
+			border: 1px solid rgba(0, 0, 0, 0.1);
+			background: #ccc;
+		
+			/* style du texte des boutons */
+			font: 1em helvetica, sans-serif;
+			text-align: center;
+			text-decoration: none;
+			color: black;
+			text-shadow: 0 1px 0 #fff;
+				
+			/* coins arrondis de rayon 7px */
+			-moz-border-radius: 7px;
+			-webkit-border-radius: 7px;
+			-o-border-radius: 7px;
+			-ms-border-radius: 7px;
+			-khtml-border-radius: 7px;
+			border-radius: 7px;
+			
+			/* fond avec un dégradé de couleur (blanc en haut, gris 210, 210, 210 en bas) */	
+			background: -moz-linear-gradient(top, rgb(255, 255, 255), rgb(210, 210, 210));
+			background: -webkit-gradient(linear, right top, right bottom, from(rgb(255, 255, 255)), to(rgb(210, 210, 210)));
+			background: linear-gradient(to bottom, rgb(255, 255, 255), rgb(210, 210, 210));
+			
+			/* ombre portée noire de taille 2px */
+			-webkit-box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, 0.3);
+			-moz-box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, 0.3);
+			-o-box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, 0.3);
+			box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, 0.3);
+		}
+		
+		/* ------------------------ styles lies au systeme d'affichage de messages ---------------------------- */
+
+		/* style des éléments <div> qui sont enfants directs d'un élément possédant la classe "classe_message" */
+		.classe_message div{
+			/* dimensions de la division, padding, margin, bordure */
+			width: 500px;
+			background: #fff;
+			position: relative;
+			margin: 10% auto;
+			padding: 30px;
+		
+			/* style du texte de la division */
+			text-shadow: 0 1px 0 #fff;			
+			
+			/* coins arrondis de rayon 7px */
+			-moz-border-radius: 7px;
+			-webkit-border-radius: 7px;
+			-o-border-radius: 7px;
+			-ms-border-radius: 7px;
+			-khtml-border-radius: 7px;
+			border-radius: 7px;
+			
+			/* ombre portée noire */
+			-webkit-box-shadow: 0 3px 20px rgba(0, 0, 0, 0.9);
+			-moz-box-shadow: 0 3px 20px rgba(0, 0, 0, 0.9);
+			-o-box-shadow: 0 3px 20px rgba(0, 0, 0, 0.9);
+			box-shadow: 0 3px 20px rgba(0, 0, 0, 0.9);
+			
+			/* fond avec un dégradé de couleur (blanc en haut, gris 210, 210, 210 en bas) */	
+			background: -moz-linear-gradient(top, rgb(255, 255, 255), rgb(210, 210, 210));
+			background: -webkit-gradient(linear, right top, right bottom, from(rgb(255, 255, 255)), to(rgb(210, 210, 210)));
+			background: linear-gradient(to bottom, rgb(255, 255, 255), rgb(210, 210, 210));
+		}
+		
+		/* style des titres <h2> possédant la classe "classe_avertissement" et situés dans l'élément id="affichage_message" */
+		#affichage_message h2.classe_avertissement {
+			/* style du titre du message d'avertissement et son icone */
+			padding-left: 50px;
+			line-height: 32px;
+			background: url(../images-tp-4-4/avertissement.png) no-repeat left bottom;
+			color: #0b4c8e;
+		}
+		
+		/* style des titres <h2> possédant la classe "classe_information" et situés dans l'élément id="affichage_message" */
+		#affichage_message h2.classe_information {
+			/* style du titre du message d'information et son icone */
+			padding-left: 50px;
+			line-height: 32px;
+			background: url(../images-tp-4-4/information.png) no-repeat left bottom;
+			color: #0b4c8e;
+		}
+		
+		/* style des <p> possédant la classe "classe_texte_message" et situés dans l'élément id="affichage_message" */
+		#affichage_message .classe_texte_message p  {
+			/* style du message */
+			padding-left: 50px;
+			font-size: 1.2em;
+		}
+		
+		/* style des liens hypertextes <a> situés dans des éléments possédant la classe "classe_message" */
+		.classe_message a{
+			/* style du lien de fermeture */
+			position: absolute;
+			right: 10px;
+			top: 10px;
+			color: #000;
+		}
+		
+		/* style des éléments possédant la classe "classe_message" */
+		/* le conteneur qui va recouvrir la page */
+		.classe_message {
+			/* on occupe tout l'espace */
+			position: fixed;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			/* un fond noir avec une transparence de 30% */
+			background: rgba(0, 0, 0, 0.3);
+			/* le conteneur est placé sur la page */
+			z-index: 10000;
+			
+			/* utilisation de la transformation de transparence à l'ouverture */
+			-webkit-transition: opacity 500ms ease-in;
+			-moz-transition: opacity 500ms ease-in;
+			-o-transition: opacity 500ms ease-in;
+			transition: opacity 500ms ease-in;
+			
+			/* au chargement de la page, le conteneur est transparent */
+			opacity: 0;
+			/* et on ne peut pas cliquer sur ses éléments */
+			pointer-events: none;
+		}
+		/* quand le conteneur est ciblé, il devient opaque */
+		.classe_message:target {
+			opacity: 1;
+			/* et on peut maintenant cliquer sur ses éléments */
+			pointer-events: auto;
+		}
+		
+		/* animation à l'ouverture de la boîte de message */
+		@-webkit-keyframes animation_ouverture {
+			0% { -webkit-transform: scale3d(0.1, 0.1, 1); -webkit-box-shadow: 0 3px 20px rgba(0, 0, 0, 0.9); }
+			55% { -webkit-transform: scale3d(1.08, 1.08, 1); -webkit-box-shadow: 0 10px 20px rgba(0, 0, 0, 0); }
+			75% { -webkit-transform: scale3d(0.95, 0.95, 1); -webkit-box-shadow: 0 0 20px rgba(0, 0, 0, 0.9); }
+			100% { -webkit-transform: scale3d(1, 1, 1); -webkit-box-shadow: 0 3px 20px rgba(0, 0, 0, 0.9); }	
+		}
+		@-moz-keyframes animation_ouverture {
+			0% { -moz-transform: scale3d(0.1, 0.1, 1); -moz-box-shadow: 0 3px 20px rgba(0, 0, 0, 0.9); }
+			55% { -moz-transform: scale3d(1.08, 1.08, 1); -moz-box-shadow: 0 10px 20px rgba(0, 0, 0, 0); }
+			75% { -moz-transform: scale3d(0.95, 0.95, 1); -moz-box-shadow: 0 0 20px rgba(0, 0, 0, 0.9); }
+			100% { -moz-transform: scale3d(1, 1, 1); -moz-box-shadow: 0 3px 20px rgba(0, 0, 0, 0.9); }	
+		}
+		@-o-keyframes animation_ouverture {
+			0% { -o-transform: scale3d(0.1, 0.1, 1); -o-box-shadow: 0 3px 20px rgba(0, 0, 0, 0.9); }
+			55% { -o-transform: scale3d(1.08, 1.08, 1); -o-box-shadow: 0 10px 20px rgba(0, 0, 0, 0); }
+			75% { -o-transform: scale3d(0.95, 0.95, 1); -o-box-shadow: 0 0 20px rgba(0, 0, 0, 0.9); }
+			100% { -o-transform: scale3d(1, 1, 1); -o-box-shadow: 0 3px 20px rgba(0, 0, 0, 0.9); }	
+		}
+		@keyframes animation_ouverture {
+			0% { transform: scale3d(0.1, 0.1, 1); box-shadow: 0 3px 20px rgba(0, 0, 0, 0.9); }
+			55% { transform: scale3d(1.08, 1.08, 1); box-shadow: 0 10px 20px rgba(0, 0, 0, 0); }
+			75% { transform: scale3d(0.95, 0.95, 1); box-shadow: 0 0 20px rgba(0, 0, 0, 0.9); }
+			100% { transform: scale3d(1, 1, 1); box-shadow: 0 3px 20px rgba(0, 0, 0, 0.9); }	
+		}
+		/* declenchement de l'animation d'ouverture */
+		.classe_message:target > div {
+			-webkit-animation: animation_ouverture 1000ms linear;
+			-moz-animation: animation_ouverture 1000ms linear;
+			-o-animation: animation_ouverture 1000ms linear;
+			animation: animation_ouverture 1000ms linear;
+		}
+		
+		/* animation à la fermeture de la boîte de message */
+		@-webkit-keyframes animation_fermeture {
+			0% { -webkit-transform: scale3d(1, 1, 1); }
+			100% { -webkit-transform: scale3d(0.1, 0.1, 1); }
+		}
+		@-moz-keyframes animation_fermeture {
+			0% { -moz-transform: scale3d(1, 1, 1); }
+			100% { -moz-transform: scale3d(0.1, 0.1, 1); }
+		}
+		@-o-keyframes animation_fermeture {
+			0% { -o-transform: scale3d(1, 1, 1); }
+			100% { -o-transform: scale3d(0.1, 0.1, 1); }
+		}
+		@keyframes animation_fermeture {
+			0% { transform: scale3d(1, 1, 1); }
+			100% { transform: scale3d(0.1, 0.1, 1); }
+		}
+		/* déclenchement de l'animation de fermeture */
+		.classe_message > div {
+			-webkit-animation: animation_fermeture 500ms linear;
+			-moz-animation: animation_fermeture 500ms linear;
+			-o-animation: animation_fermeture 500ms linear;
+			animation: animation_fermeture 500ms linear;
+		}
+					
+	</style>
+	<script>
+		// dès que la page est chargée (événement onload), la fonction initialisations est exécutée
+		window.onload = initialisations;
+		
+		// la fonction initialisations appelée à la fin du chargement de la page
+		function initialisations() {
+			// un clic sur le bouton "btnInformation" doit afficher une information
+				document.getElementById("btnInformation").onclick = function() { 
+				afficher_information('Ceci est une information...'); 
+			};
+			// un clic sur le bouton "btnAvertissement" doit afficher un avertissement
+				document.getElementById("btnAvertissement").onclick = function() { 
+				afficher_avertissement('Ceci est un avertissement...'); 
+			};
+		}
+		
+		// la fonction d'affichage d'une information
+		function afficher_information(msg) {
+			document.getElementById("titre_message").innerHTML = "Information...";
+			document.getElementById("titre_message").className = "classe_information";
+			document.getElementById("texte_message").innerHTML = msg;
+			window.open ("#affichage_message", "_self");
+		}
+		
+		// la fonction d'affichage d'un avertissement
+		function afficher_avertissement(msg) {
+			document.getElementById("titre_message").innerHTML = "Avertissement...";
+			document.getElementById("titre_message").className = "classe_avertissement";
+			document.getElementById("texte_message").innerHTML = msg;
+			window.open ("#affichage_message", "_self");
+		}
+
+	</script>
+</head>
+<body>
+	<div id="page">
+		<p><a id="lien" href="#affichage_message" class="bouton">Ouvrir la fenêtre de message</a></p>	
+		<p><button id="btnInformation">Afficher une information</button></p>
+		<p><button id="btnAvertissement">Afficher un avertissement</button></p>
+	</div>
+	
+	<aside id="affichage_message" class="classe_message">
+		<div>
+			<h2 id="titre_message" class="classe_information">Message</h2>
+			<p id="texte_message" class="classe_texte_message">Voici le texte du message<br>sur 2 lignes...</p>
+			<a href="#close" title="Fermer">Fermer</a>
+		</div>
+	</aside>	
+</body>
+</html>
